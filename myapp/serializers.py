@@ -15,10 +15,10 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class FacultySerializer(serializers.ModelSerializer):
-	department = serializers.SerializerMethodField(method_name="get_departments", read_only=True)
+	department = serializers.SerializerMethodField(method_name="get_departments", read_only=True, )
 
 	def get_departments(self, obj):
-		return Department.objects.filter(department=obj.department)
+		return Department.objects.filter(faculty=obj)
 
 	class Meta:
 		model = Faculty

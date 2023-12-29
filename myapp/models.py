@@ -8,6 +8,25 @@ class CourSeChoices(models.IntegerChoices):
 	FIFTH = 4
 
 
+class Faculty(models.Model):
+	title = models.CharField(max_length=50, unique=True, verbose_name="Название", null=True, blank=True)
+	head = models.ForeignKey(
+		"myapp.Teacher",
+		on_delete=models.CASCADE,
+		verbose_name="Декан",
+		related_name="head",
+		null=True,
+		blank=True,
+	)
+
+	def __str__(self):
+		return self.title
+
+	class Meta:
+		verbose_name = "Факультет"
+		verbose_name_plural = "Факультеты"
+
+
 class Teacher(models.Model):
 	class Roles(models.IntegerChoices):
 		TEACHER = (1, "Учитель")
@@ -16,21 +35,16 @@ class Teacher(models.Model):
 
 	full_name = models.CharField(max_length=50, verbose_name="ФИО")
 	email = models.EmailField(blank=True, null=True, verbose_name="Адрес эл.почты")
-	phone_number = models.IntegerField(blank=True, verbose_name="Номер телефона")
-	faculty = models.ForeignKey(
-		"myapp.Faculty",
-		blank=True,
-		on_delete=models.CASCADE,
-		verbose_name="Факультет",
-		related_name="teacher_faculty",
-	)
+	phone_number = models.IntegerField(blank=True, null=True, verbose_name="Номер телефона")
 	department = models.ForeignKey(
 		"myapp.Department",
-		on_delete=models.CASCADE,
 		blank=True,
-		verbose_name="Кафедра",
-		related_name="teacher_department"
+		null=True,
+		on_delete=models.CASCADE,
+		verbose_name="Факультет",
+		related_name="teacher_department",
 	)
+
 	role = models.SmallIntegerField(choices=Roles.choices, verbose_name="Роль")
 
 	def __str__(self):
@@ -60,38 +74,17 @@ class Student(models.Model):
 		verbose_name_plural = "Студенты"
 
 
-class Faculty(models.Model):
-	title = models.CharField(max_length=50, unique=True, verbose_name="Название", null=True, blank=True)
-	head = models.ForeignKey(
-		"myapp.Teacher",
-		on_delete=models.CASCADE,
-		verbose_name="Декан",
-		related_name="faculty_head",
-		blank=True,
-	)
-	departments = models.ManyToManyField(
-		"myapp.Department",
-		related_name="faculty_departments",
-		verbose_name="Кафедры",
-		blank=True,
-	)
-
-	def __str__(self):
-		return self.title
-
-	class Meta:
-		verbose_name = "Факультет"
-		verbose_name_plural = "Факультеты"
-
-
 class Department(models.Model):
-	title = models.CharField(max_length=75, unique=True, verbose_name="Декан")
+	title = models.CharField(max_length=75, unique=True, verbose_name="Название")
+	faculty = models.ForeignKey("myapp.Faculty", on_delete=models.CASCADE, blank=True, null=True, related_name="departament_faculty")
 	head = models.ForeignKey(
 		"myapp.Teacher",
+		blank=True,
+		null=True,
 		on_delete=models.CASCADE,
 		related_name="department_head",
 		verbose_name="Заведующий кафедры",
-		blank=True,
+
 	)
 
 	def __str__(self):
