@@ -67,12 +67,16 @@ class Faculty(models.Model):
 		"myapp.Teacher",
 		on_delete=models.CASCADE,
 		verbose_name="Декан",
-		related_name="faculty_head"
+		related_name="faculty_head",
+		blank=True,
+		null=True
 	)
 	departments = models.ManyToManyField(
 		"myapp.Department",
 		related_name="faculty_departments",
-		verbose_name="Кафедры"
+		verbose_name="Кафедры",
+		blank=True,
+		null=True
 	)
 
 	def __str__(self):
@@ -91,6 +95,8 @@ class Department(models.Model):
 		on_delete=models.CASCADE,
 		related_name="department_head",
 		verbose_name="Заведующий кафедры",
+		blank=True,
+		null=True,
 	)
 
 	def save(
@@ -119,7 +125,7 @@ class Speciality(models.Model):
 		RC = "Рв"
 
 	group = models.CharField(max_length=5, choices=GroupChoices.choices, verbose_name="Группа")
-	curator = models.ForeignKey("myapp.Teacher", on_delete=models.CASCADE, verbose_name="Куратор")
+	curator = models.ForeignKey("myapp.Teacher", on_delete=models.CASCADE, verbose_name="Куратор", null=True, blank=True)
 	title = models.CharField(max_length=50, unique=True, verbose_name="Название")
 	code_name = models.IntegerField(unique=True, verbose_name="Кодовое название")
 	department = models.ForeignKey(
