@@ -16,18 +16,18 @@ class Teacher(models.Model):
 
 	full_name = models.CharField(max_length=50, verbose_name="ФИО")
 	email = models.EmailField(blank=True, null=True, verbose_name="Адрес эл.почты")
-	phone_number = models.IntegerField(blank=True, null=True, verbose_name="Номер телефона")
+	phone_number = models.IntegerField(blank=True, verbose_name="Номер телефона")
 	faculty = models.ForeignKey(
 		"myapp.Faculty",
+		blank=True,
 		on_delete=models.CASCADE,
 		verbose_name="Факультет",
-		related_name="teacher_faculty"
+		related_name="teacher_faculty",
 	)
 	department = models.ForeignKey(
 		"myapp.Department",
 		on_delete=models.CASCADE,
 		blank=True,
-		null=True,
 		verbose_name="Кафедра",
 		related_name="teacher_department"
 	)
@@ -61,22 +61,19 @@ class Student(models.Model):
 
 
 class Faculty(models.Model):
-
-	title = models.CharField(max_length=50, unique=True, verbose_name="Название")
+	title = models.CharField(max_length=50, unique=True, verbose_name="Название", null=True, blank=True)
 	head = models.ForeignKey(
 		"myapp.Teacher",
 		on_delete=models.CASCADE,
 		verbose_name="Декан",
 		related_name="faculty_head",
 		blank=True,
-		null=True
 	)
 	departments = models.ManyToManyField(
 		"myapp.Department",
 		related_name="faculty_departments",
 		verbose_name="Кафедры",
 		blank=True,
-		null=True
 	)
 
 	def __str__(self):
@@ -88,7 +85,6 @@ class Faculty(models.Model):
 
 
 class Department(models.Model):
-
 	title = models.CharField(max_length=75, unique=True, verbose_name="Декан")
 	head = models.ForeignKey(
 		"myapp.Teacher",
@@ -96,16 +92,7 @@ class Department(models.Model):
 		related_name="department_head",
 		verbose_name="Заведующий кафедры",
 		blank=True,
-		null=True,
 	)
-
-	def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
-		self.head.faculty = self
-		super().save(
-			force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields
-		)
 
 	def __str__(self):
 		return self.title
@@ -125,7 +112,8 @@ class Speciality(models.Model):
 		RC = "Рв"
 
 	group = models.CharField(max_length=5, choices=GroupChoices.choices, verbose_name="Группа")
-	curator = models.ForeignKey("myapp.Teacher", on_delete=models.CASCADE, verbose_name="Куратор", null=True, blank=True)
+	curator = models.ForeignKey("myapp.Teacher", on_delete=models.CASCADE, verbose_name="Куратор", null=True,
+	                            blank=True)
 	title = models.CharField(max_length=50, unique=True, verbose_name="Название")
 	code_name = models.IntegerField(unique=True, verbose_name="Кодовое название")
 	department = models.ForeignKey(
@@ -138,6 +126,3 @@ class Speciality(models.Model):
 
 	def __str__(self):
 		return f"{self.title} - {self.course}_{self.code_name}"
-
-
-
