@@ -14,7 +14,7 @@ class Teacher(models.Model):
 		HEAD_OF_DEPARTMENT = (2, "Декан")
 		HEAD_OF_FACULTY = (3, "Заведующий кафедрой")
 
-	full_name = models.CharField(max_length=50, verbose_name="Учитель")
+	full_name = models.CharField(max_length=50, verbose_name="ФИО")
 	email = models.EmailField(blank=True, null=True, verbose_name="Адрес эл.почты")
 	phone_number = models.IntegerField(blank=True, null=True, verbose_name="Номер телефона")
 	faculty = models.ForeignKey(
