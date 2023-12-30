@@ -75,7 +75,7 @@ class Student(models.Model):
 
 
 class Department(models.Model):
-	title = models.CharField(max_length=75, unique=True, verbose_name="Название")
+	title = models.CharField(max_length=75, unique=True, verbose_name="Названиеd")
 	faculty = models.ForeignKey("myapp.Faculty", on_delete=models.CASCADE, blank=True, null=True, related_name="departament_faculty")
 	head = models.ForeignKey(
 		"myapp.Teacher",
